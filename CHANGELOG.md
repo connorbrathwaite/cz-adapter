@@ -2,6 +2,16 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.1.1"></a>
+## [0.1.1](https://github.com/connorbrathwaite/cz-adapter/compare/v0.1.0...v0.1.1) (2018-02-03)
+
+
+### Bug Fixes
+
+* package name ([79cd10f](https://github.com/connorbrathwaite/cz-adapter/commit/79cd10f)), closes [#1](https://github.com/connorbrathwaite/cz-adapter/issues/1)
+
+
+
 <a name="0.1.0"></a>
 # 0.1.0 (2018-02-03)
 
