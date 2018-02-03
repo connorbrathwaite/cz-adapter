@@ -1,0 +1,60 @@
+{
+  "name": "@connorbrathwaite/cz-adapter",
+  "version": "0.0.0",
+  "description": "cz adapter",
+  "author": "Connor Brathwaite <connor@biospective.com>",
+  "contributors": [
+    "Kent C. Dodds <kent@doddsfamily.us> (http://kentcdodds.com/)",
+    "Jane Kim <jane@janekim.me> (http://janekim.me)"
+  ],
+  "main": "index.js",
+  "license": "MIT",
+  "engines": {
+    "node": ">=8"
+  },
+  "dependencies": {
+    "git-branch": "^1.0.0",
+    "inquirer": "^3.2.0",
+    "longest": "^2.0.1",
+    "right-pad": "^1.0.1",
+    "word-wrap": "^1.2.3"
+  },
+  "devDependencies": {
+    "chai": "^4.1.0",
+    "commitizen": "^2.9.6",
+    "eslint": "^4.15.0",
+    "husky": "^0.14.3",
+    "lint-staged": "^6.0.1",
+    "mocha": "^3.4.2",
+    "nodemon": "^1.11.0",
+    "prettier": "^1.10.2",
+    "sinon": "^2.3.7",
+    "sinon-chai": "^2.11.0",
+    "standard-version": "^4.3.0",
+    "with-package": "0.2.0"
+  },
+  "scripts": {
+    "commit": "git-cz",
+    "precommit": "lint-staged",
+    "format": "prettier --write '.{js,json,md}'",
+    "lint": "eslint --fix",
+    "start": "nodemon --exec \"npm run test\"",
+    "test": "mocha index.test",
+    "release": "standard-version",
+    "tag:beta": "with-package npm dist-tag add pkg.name@pkg.version beta"
+  },
+  "moduleRoots": [
+    "src"
+  ],
+  "config": {
+    "commitizen": {
+      "path": "./index.js"
+    }
+  },
+  "lint-staged": {
+    "*.js": [
+      "prettier --write",
+      "git add"
+    ]
+  }
+}
