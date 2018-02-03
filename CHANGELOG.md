@@ -2,6 +2,17 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="0.1.0"></a>
+# 0.1.0 (2018-02-03)
+
+
+### Features
+
+* **everything:** init commit ([b20731d](https://github.com/connorbrathwaite/cz-adapter/commit/b20731d)), closes [#1](https://github.com/connorbrathwaite/cz-adapter/issues/1)
+* test ([cbb0613](https://github.com/connorbrathwaite/cz-adapter/commit/cbb0613)), closes [#1](https://github.com/connorbrathwaite/cz-adapter/issues/1)
+
+
+
 <a name="4.1.0"></a>
 # [4.1.0](https://github.com/connorbrathwaite/cz-jira-smart-commit/compare/v4.0.1...v4.1.0) (2018-02-02)
 
