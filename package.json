@@ -30,8 +30,7 @@
     "prettier": "^1.10.2",
     "sinon": "^2.3.7",
     "sinon-chai": "^2.11.0",
-    "standard-version": "^4.3.0",
-    "with-package": "0.2.0"
+    "standard-version": "^4.3.0"
   },
   "scripts": {
     "commit": "git-cz",
@@ -40,12 +39,8 @@
     "lint": "eslint --fix",
     "start": "nodemon --exec \"npm run test\"",
     "test": "mocha index.test",
-    "release": "standard-version",
-    "tag:beta": "with-package npm dist-tag add pkg.name@pkg.version beta"
+    "release": "standard-version"
   },
-  "moduleRoots": [
-    "src"
-  ],
   "config": {
     "commitizen": {
       "path": "./index.js"
