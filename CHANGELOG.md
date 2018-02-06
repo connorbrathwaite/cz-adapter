@@ -2,6 +2,18 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.1.0"></a>
+# [2.1.0](https://github.com/connorbrathwaite/cz-adapter/compare/v0.1.1...v2.1.0) (2018-02-06)
+
+
+### Features
+
+* **everything:** jest for testing, config file for gl api calls when fetching scoped issues ([a18cc09](https://github.com/connorbrathwaite/cz-adapter/commit/a18cc09)), closes [#11](https://github.com/connorbrathwaite/cz-adapter/issues/11) [#5](https://github.com/connorbrathwaite/cz-adapter/issues/5)
+* **main + tests:** test ([fdf1bfe](https://github.com/connorbrathwaite/cz-adapter/commit/fdf1bfe)), closes [#5](https://github.com/connorbrathwaite/cz-adapter/issues/5)
+* **testing:** adsd ([6954f39](https://github.com/connorbrathwaite/cz-adapter/commit/6954f39)), closes [#11](https://github.com/connorbrathwaite/cz-adapter/issues/11) [#10](https://github.com/connorbrathwaite/cz-adapter/issues/10)
+
+
+
 <a name="0.1.1"></a>
 ## [0.1.1](https://github.com/connorbrathwaite/cz-adapter/compare/v0.1.0...v0.1.1) (2018-02-03)
 
