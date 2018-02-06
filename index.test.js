@@ -1,10 +1,11 @@
 const adapter = require('./index.js')
+const formatCommit = require('./format-commit')
 
 it('should be a function', () => {
   expect(adapter.prompter).toBeInstanceOf(Function)
 })
 
-describe('format commits', () => {
+describe('formatCommit', () => {
   const type = 'feat'
   const scope = 'chore'
   const isBreaking = false
@@ -26,11 +27,11 @@ describe('format commits', () => {
   }
 
   it('should be a function', () => {
-    expect(adapter.formatCommit).toBeInstanceOf(Function)
+    expect(formatCommit).toBeInstanceOf(Function)
   })
 
-  it('should perform a full commit', () => {
-    const result = adapter.formatCommit(mockCommit)
+  it('should format a full commit', () => {
+    const result = formatCommit(mockCommit)
     expect(result).toMatchSnapshot()
   })
 })
