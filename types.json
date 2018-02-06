@@ -35,14 +35,9 @@
     "title": "Tests"
   },
   {
-    "name": "build",
-    "description": "changes that affect the build system or external dependencies (example scopes: gulp, broccoli, npm)",
-    "title": "Builds"
-  },
-  {
-    "name": "ci",
-    "description": "changes to our ci configuration files and scripts",
-    "title": "Continuous Integrations"
+    "name": "build or ci",
+    "description": "changes that affect the build system or ci configuration files and scripts",
+    "title": "Builds & Continuous Integrations"
   },
   {
     "name": "chore",

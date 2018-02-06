@@ -1,9 +1,14 @@
+const R = require('ramda')
 const inquirer = require('inquirer')
 const rightPad = require('right-pad')
 const branch = require('git-branch')
-const longest = require('longest')
 const wrap = require('word-wrap')
-const types = require('./commit-types')
+const fetch = require('node-fetch')
+const types = require('./types')
+
+const gitLabUrl = 'http://g2-uat.biospective.com/api/v4'
+const gitLabAccessToken = 'Xt3GUsnuVybXsQ6bUxQk'
+const assingedIssuesRequest = `${gitLabUrl}/issues?scope=assigned-to-me&private_token=${gitLabAccessToken}`
 
 const maxLineWidth = 100
 const currentBranch = branch.sync()
@@ -16,79 +21,96 @@ const wrapOptions = {
   width: maxLineWidth
 }
 
-const choices = types.map(type => ({
+const transformTypesToList = R.map(type => ({
   name: rightPad(type.name + ': ', paddingLength) + type.description,
   value: type.name
 }))
 
-const filter = array => array.filter(item => !!item)
+const transformIssueToPromptListItem = issue => ({
+  name: `${issue.title} (${issue.web_url})`,
+  value: `#${issue.iid}`
+})
+
+const transformIssuesPayloadToList = R.pipe(
+  R.reject(R.propEq('state', 'closed')),
+  R.map(transformIssueToPromptListItem)
+)
+
+const getIssueChoices = fetch(assingedIssuesRequest)
+  .then(res => res.json())
+  .then(transformIssuesPayloadToList)
+
+const typeChoices = transformTypesToList(types)
 
 const prompter = (cz, commit) => {
-  inquirer
-    .prompt([
-      {
-        type: 'list',
-        name: 'type',
-        message: `select the type of change that you're committing:`,
-        choices: choices
-      },
-      {
-        type: 'input',
-        name: 'scope',
-        message: `what is the scope of this change? (e.g. package.json) (press enter to skip)\n`
-      },
-      {
-        type: 'input',
-        name: 'issues',
-        message: `gitlab issue id(s)? (should include at least branch: ${currentBranch})\n`,
-        validate: input => {
-          if (!input) return `no issues specified`
-          return true
+  getIssueChoices.then(issueChoices =>
+    inquirer
+      .prompt([
+        {
+          type: 'list',
+          name: 'type',
+          message: `select the type of change that you're committing\n`,
+          choices: typeChoices
+        },
+        {
+          type: 'input',
+          name: 'scope',
+          message: `what is the scope of this change? (e.g. package.json) (press enter to skip)\n`
+        },
+        {
+          type: 'checkbox',
+          name: 'issues',
+          message: `gitlab issue id(s)? (branch: ${currentBranch})\n`,
+          choices: issueChoices,
+          validate: input => {
+            if (!input) return `no issues specified`
+            return true
+          }
+        },
+        {
+          type: 'input',
+          name: 'transition',
+          message: `transition command (e.g: resolve, in-progress, testing, review, closed, etc.) (optional)\n`
+        },
+        {
+          type: 'input',
+          name: 'subject',
+          message: `write a short, imperative tense description of the change (i.e: bumped react dependency to 16.0.2rc) (required)\n`,
+          validate: input => {
+            if (!input) return `empty commit message`
+            return true
+          }
+        },
+        {
+          type: 'input',
+          name: 'comment',
+          message: `provide a longer description of the change (optional)\n`
+        },
+        {
+          type: 'confirm',
+          name: 'isBreaking',
+          message: 'are there any breaking changes?\n',
+          default: R.F()
+        },
+        {
+          type: 'input',
+          name: 'breaking',
+          message: 'describe the breaking changes\n',
+          when: R.propEq('isBreaking', R.T)
+        },
+        {
+          type: 'input',
+          name: 'time',
+          message: 'time spent? (i.e. 3h 15m)\n',
+          validate: input => {
+            if (!input) return `please provide a time estimate`
+            return true
+          }
         }
-      },
-      {
-        type: 'input',
-        name: 'transition',
-        message: `transition command (e.g: resolve, in-progress, testing, review, closed, etc.) (optional)\n`
-      },
-      {
-        type: 'input',
-        name: 'subject',
-        message: `write a short, imperative tense description of the change (e.g: bumped react dependency to 16.0.2rc) (required)\n`,
-        validate: input => {
-          if (!input) return `empty commit message`
-          return true
-        }
-      },
-      {
-        type: 'input',
-        name: 'comment',
-        message: `provide a longer description of the change (optional)\n`
-      },
-      {
-        type: 'confirm',
-        name: 'isBreaking',
-        message: 'are there any breaking changes?\n',
-        default: false
-      },
-      {
-        type: 'input',
-        name: 'breaking',
-        message: 'describe the breaking changes\n',
-        when: answers => answers.isBreaking
-      },
-      {
-        type: 'input',
-        name: 'time',
-        message: 'time spent? (i.e. 3h 15m)\n',
-        validate: input => {
-          if (!input) return `please provide a time estimate`
-          return true
-        }
-      }
-    ])
-    .then(formatCommit)
-    .then(commit)
+      ])
+      .then(formatCommit)
+      .then(commit)
+  )
 }
 
 const formatCommit = answers => {
@@ -101,18 +123,12 @@ const formatCommit = answers => {
     maxLineWidth
   )
 
-  const comment = answers.comment ? 'comment: ' + answers.comment : undefined
+  // optional fields
+  const comment = answers.comment ? 'comment: ' + answers.comment : false
 
   const transition = answers.transition
     ? 'transition: ' + answers.transition
-    : undefined
-
-  const body = filter([
-    comment,
-    `spent: ${answers.time}`,
-    `issues: ${answers.issues}`,
-    transition
-  ]).join('\n\n')
+    : false
 
   // apply breaking change prefix, removing it if already present
   let breaking = answers.breaking ? answers.breaking.trim() : ''
@@ -121,6 +137,15 @@ const formatCommit = answers => {
     : ''
 
   breaking = wrap(breaking, wrapOptions)
+
+  const rawCommit = [
+    comment,
+    `spent: ${answers.time}`,
+    `issues: ${answers.issues}`,
+    transition
+  ]
+
+  const body = R.pipe(R.reject(R.F), R.join('\n\n'))(rawCommit)
 
   return `${head}\n\n${body}\n\n${breaking}`
 }
