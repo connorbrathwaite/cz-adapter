@@ -2,14 +2,53 @@ const R = require('ramda')
 const wrap = require('word-wrap')
 const rightPad = require('right-pad')
 const fetch = require('node-fetch')
+const {
+  gitLabAccessToken,
+  gitLabApiUrl,
+  projectId
+} = require('rc')('gitlabcz')
+
 const types = require('./types')
+
+const headers = {'Private-Token': gitLabAccessToken}
+
+/* 
+  getIssueChoices :: () -> Promise -> [Object]
+  https://docs.gitlab.com/ee/api/issues.html#list-issues
+*/
+const getIssueChoices = () =>
+  fetch(
+    `${gitLabApiUrl}/issues?scope=assigned-to-me&private_token=${gitLabAccessToken}`,
+    {
+      method: 'GET',
+      headers
+    }
+  )
+    .then(res => res.json())
+    .then(transformIssuesPayloadToList)
+
+/* 
+  postSpentTime :: {String, String} -> Promise -> [Object]
+  https://docs.gitlab.com/ee/api/issues.html#add-spent-time-for-an-issue
+*/
+const postSpentTime = ({issueId, duration}) =>
+  fetch(
+    `${gitLabApiUrl}/projects/${projectId}/issues/${issueId}/add_spent_time?${duration}`,
+    {
+      method: 'POST',
+      headers
+    }
+  )
+    .then(res => res.json())
+    .then(transformIssuesPayloadToList)
+
 /* 
   paddingLength :: [Object] -> Number 
 */
 const paddingLength = Object.keys(types.length).length + 1
 
 /* 
-  formatCommit :: Object -> String 
+  format :: Object -> String 
 */
 const transformTypesToList = R.map(type => ({
   name: R.concat(
@@ -39,22 +78,9 @@ const transformIssuesPayloadToList = R.pipe(
 )
 
 /* 
-  getIssueChoices :: {(String, String)} -> Promise -> [Object]
+  format :: Object -> String 
 */
-const getIssueChoices = ({
-  gitLabApiUrl,
-  gitLabAccessToken
-}) =>
-  fetch(
-    `${gitLabApiUrl}/issues?scope=assigned-to-me&private_token=${gitLabAccessToken}`
-  )
-    .then(res => res.json())
-    .then(transformIssuesPayloadToList)
-
-/* 
-  formatCommit :: Object -> String 
-*/
-const formatCommit = answers => {
+const format = answers => {
   const scope = answers.scope
     ? `(${R.trim(answers.scope)})`
     : ''
@@ -106,7 +132,7 @@ const formatCommit = answers => {
 }
 
 module.exports = {
-  formatCommit,
+  format,
   typeChoices,
   getIssueChoices
 }

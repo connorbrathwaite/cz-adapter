@@ -1,29 +1,28 @@
 const R = require('ramda')
-const cosmiconfig = require('cosmiconfig')
 const inquirer = require('inquirer')
-
 const {
-  formatCommit,
+  format,
   typeChoices,
   getIssueChoices
 } = require('./utils')
 
-const explorer = cosmiconfig('gitlabcz')
-
-const prompter = (cz, commit) => {
-  explorer
-    .load()
-    .then(
-      R.pipe(
-        R.prop('config'),
-        R.pick(['gitLabApiUrl', 'gitLabAccessToken'])
-      )
-    )
-    .then(getIssueChoices)
-    .then(issueChoices => {
-      console.log(issueChoices)
+const prompter = (cz, commit) =>
+  getIssueChoices()
+    .then(issueChoices =>
       inquirer
         .prompt([
+          {
+            type: input,
+            name: 'gitLabApiUrl',
+            message: `what is your gitlab api uri? (configure a project default in .gitlabczrc)\n`,
+            default: gitLabApiUrl
+          },
+          {
+            type: input,
+            name: 'gitLabAccessToken',
+            message: `what is your gitlab private access token? (configure a project default in .gitlabczrc)\n`,
+            default: gitLabAccessToken
+          },
           {
             type: 'list',
             name: 'type',
@@ -87,6 +86,7 @@ const prompter = (cz, commit) => {
             type: 'list',
             name: 'time',
             message: 'time spent?\n',
+            pageSize: 4,
             choices: [
               '15m',
               '30m',
@@ -94,7 +94,8 @@ const prompter = (cz, commit) => {
               '1h 30m',
               '2h',
               '2h 30m',
-              '3h'
+              '3h',
+              '3h 30m'
             ],
             validate: R.ifElse(
               R.isEmpty,
@@ -103,11 +104,10 @@ const prompter = (cz, commit) => {
             )
           }
         ])
-        .then(formatCommit)
+        .then(format)
         .then(commit)
-    })
+    )
     .catch(console.error)
-}
 
 module.exports = {
   prompter
