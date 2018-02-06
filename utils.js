@@ -10,7 +10,10 @@ const {
 
 const types = require('./types')
 
-const headers = {'Private-Token': gitLabAccessToken}
+/* https://docs.gitlab.com/ee/api/README.html#personal-access-tokens */
+const headers = {
+  'Private-Token': gitLabAccessToken
+}
 
 /* 
   getIssueChoices :: () -> Promise -> [Object]
@@ -40,7 +43,7 @@ const postSpentTime = ({issueId, duration}) =>
     }
   )
     .then(res => res.json())
-    .then(transformIssuesPayloadToList)
+    .then(R.prop('total_time_spent'))
 
 /* 
   paddingLength :: [Object] -> Number 
@@ -128,7 +131,20 @@ const format = answers => {
     R.join('\n\n')
   )(rawCommit)
 
-  return `${head}\n\n${body}\n\n${breaking}`
+  const commit = `${head}\n\n${body}\n\n${breaking}`
+
+  console.log(answers.time)
+
+  return (
+    postSpentTime({
+      issueId: answers.issue,
+      duration: answers.time
+    })
+      .then(console.log)
+      // .then(R.concat('total time contribution so far: '))
+      // .then(console.log)
+      .then(R.always(commit))
+  )
 }
 
 module.exports = {

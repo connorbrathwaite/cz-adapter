@@ -12,18 +12,6 @@ const prompter = (cz, commit) =>
       inquirer
         .prompt([
           {
-            type: input,
-            name: 'gitLabApiUrl',
-            message: `what is your gitlab api uri? (configure a project default in .gitlabczrc)\n`,
-            default: gitLabApiUrl
-          },
-          {
-            type: input,
-            name: 'gitLabAccessToken',
-            message: `what is your gitlab private access token? (configure a project default in .gitlabczrc)\n`,
-            default: gitLabAccessToken
-          },
-          {
             type: 'list',
             name: 'type',
             message: `select the type of change that you're committing\n`,
@@ -40,9 +28,9 @@ const prompter = (cz, commit) =>
             )
           },
           {
-            type: 'checkbox',
+            type: 'list',
             name: 'issues',
-            message: `gitlab issue id(s)?\n`,
+            message: `gitlab issue id?\n`,
             choices: issueChoices,
             validate: R.ifElse(
               R.isEmpty,
