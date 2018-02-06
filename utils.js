@@ -35,9 +35,7 @@ const postSpentTime = ({issueId, duration}) =>
     }
   )
     .then(res => res.json())
-    .then(console.log)
-    .then(R.prop('total_time_spent'))
-    .catch(console.error)
+    .then(R.prop('human_total_time_spent'))
 
 /* 
   paddingLength :: [Object] -> Number 
@@ -129,16 +127,13 @@ const format = answers => {
 
   console.log(answers.time, answers.issues)
 
-  return (
-    postSpentTime({
-      issueId: answers.issues,
-      duration: answers.time
-    })
-      .then(console.log)
-      // .then(R.concat('total time contribution so far: '))
-      // .then(console.log)
-      .then(R.always(commit))
-  )
+  return postSpentTime({
+    issueId: answers.issues,
+    duration: answers.time
+  })
+    .then(R.concat('total time contribution so far: '))
+    .then(console.log)
+    .then(R.always(commit))
 }
 
 module.exports = {
