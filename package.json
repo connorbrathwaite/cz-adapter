@@ -1,6 +1,6 @@
 {
   "name": "@connorbrathwaite/cz-adapter",
-  "version": "0.1.2",
+  "version": "2.0.0",
   "description": "cz adapter",
   "author": "Connor Brathwaite <connor@biospective.com>",
   "contributors": [
@@ -15,12 +15,12 @@
   "scripts": {
     "commit": "git-cz",
     "precommit": "lint-staged",
-    "lint": "eslint --fix",
     "start": "node index.js",
     "test": "jest",
     "release": "standard-version"
   },
   "dependencies": {
+    "cosmiconfig": "^4.0.0",
     "git-branch": "^1.0.0",
     "inquirer": "^3.2.0",
     "node-fetch": "^2.0.0",
@@ -45,6 +45,7 @@
   "lint-staged": {
     "*.js": [
       "prettier --write",
+      "eslint --fix",
       "git add"
     ]
   }
