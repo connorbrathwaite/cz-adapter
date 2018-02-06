@@ -3,8 +3,6 @@
 exports[`formatCommit should format a full commit 1`] = `
 "feat(chore): bumped react dependency to 16.0.2rc
 
-false
-
 spent: 3y 2w 7d 8h 30m
 
 issues: #1, #2

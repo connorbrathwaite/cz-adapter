@@ -1,5 +1,5 @@
 const adapter = require('./index.js')
-const formatCommit = require('./format-commit')
+const {formatCommit} = require('./utils')
 
 it('should be a function', () => {
   expect(adapter.prompter).toBeInstanceOf(Function)
