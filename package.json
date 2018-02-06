@@ -1,6 +1,6 @@
 {
-  "name": "cz-adapter",
-  "version": "0.1.1",
+  "name": "@connorbrathwaite/cz-adapter",
+  "version": "0.1.2",
   "description": "cz adapter",
   "author": "Connor Brathwaite <connor@biospective.com>",
   "contributors": [
@@ -12,34 +12,30 @@
   "engines": {
     "node": ">=8"
   },
+  "scripts": {
+    "commit": "git-cz",
+    "precommit": "lint-staged",
+    "lint": "eslint --fix",
+    "start": "node index.js",
+    "test": "jest",
+    "release": "standard-version"
+  },
   "dependencies": {
     "git-branch": "^1.0.0",
     "inquirer": "^3.2.0",
-    "longest": "^2.0.1",
+    "node-fetch": "^2.0.0",
+    "ramda": "^0.25.0",
     "right-pad": "^1.0.1",
     "word-wrap": "^1.2.3"
   },
   "devDependencies": {
-    "chai": "^4.1.0",
     "commitizen": "^2.9.6",
     "eslint": "^4.15.0",
     "husky": "^0.14.3",
+    "jest": "^22.1.4",
     "lint-staged": "^6.0.1",
-    "mocha": "^3.4.2",
-    "nodemon": "^1.11.0",
     "prettier": "^1.10.2",
-    "sinon": "^2.3.7",
-    "sinon-chai": "^2.11.0",
     "standard-version": "^4.3.0"
-  },
-  "scripts": {
-    "commit": "git-cz",
-    "precommit": "lint-staged",
-    "format": "prettier --write '.{js,json,md}'",
-    "lint": "eslint --fix",
-    "start": "nodemon --exec \"npm run test\"",
-    "test": "mocha index.test",
-    "release": "standard-version"
   },
   "config": {
     "commitizen": {
