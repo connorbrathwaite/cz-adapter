@@ -2,6 +2,24 @@
 
 All notable changes to this project will be documented in this file. See [standard-version](https://github.com/conventional-changelog/standard-version) for commit guidelines.
 
+<a name="2.2.0"></a>
+# [2.2.0](https://github.com/connorbrathwaite/cz-adapter/compare/v2.1.0...v2.2.0) (2018-02-06)
+
+
+### Features
+
+* **asd:** asd ([597a75f](https://github.com/connorbrathwaite/cz-adapter/commit/597a75f)), closes [#11](https://github.com/connorbrathwaite/cz-adapter/issues/11)
+* **asdads:** ads ([b986d5f](https://github.com/connorbrathwaite/cz-adapter/commit/b986d5f)), closes [#11](https://github.com/connorbrathwaite/cz-adapter/issues/11)
+* **asdas:** dsada ([83d4a0f](https://github.com/connorbrathwaite/cz-adapter/commit/83d4a0f)), closes [#11](https://github.com/connorbrathwaite/cz-adapter/issues/11)
+* **asdasd:** adsa ([0af4605](https://github.com/connorbrathwaite/cz-adapter/commit/0af4605)), closes [#11](https://github.com/connorbrathwaite/cz-adapter/issues/11)
+* **asdasd:** dasd ([de40944](https://github.com/connorbrathwaite/cz-adapter/commit/de40944)), closes [#11](https://github.com/connorbrathwaite/cz-adapter/issues/11)
+* **asdsad:** asdasd ([67f6b6a](https://github.com/connorbrathwaite/cz-adapter/commit/67f6b6a)), closes [#11](https://github.com/connorbrathwaite/cz-adapter/issues/11)
+* **fds:** f ([7b1f889](https://github.com/connorbrathwaite/cz-adapter/commit/7b1f889)), closes [#11](https://github.com/connorbrathwaite/cz-adapter/issues/11)
+* **sada:** asd ([e96038a](https://github.com/connorbrathwaite/cz-adapter/commit/e96038a)), closes [#11](https://github.com/connorbrathwaite/cz-adapter/issues/11)
+* **sadasd:** asdasd ([ef94045](https://github.com/connorbrathwaite/cz-adapter/commit/ef94045)), closes [#11](https://github.com/connorbrathwaite/cz-adapter/issues/11)
+
+
+
 <a name="2.1.0"></a>
 # [2.1.0](https://github.com/connorbrathwaite/cz-adapter/compare/v0.1.1...v2.1.0) (2018-02-06)
 
