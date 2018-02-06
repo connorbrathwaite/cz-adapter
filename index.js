@@ -1,4 +1,5 @@
 const R = require('ramda')
+const cosmiconfig = require('cosmiconfig')
 const inquirer = require('inquirer')
 const rightPad = require('right-pad')
 const branch = require('git-branch')
@@ -6,14 +7,10 @@ const wrap = require('word-wrap')
 const fetch = require('node-fetch')
 const types = require('./types')
 
-const gitLabUrl = 'http://g2-uat.biospective.com/api/v4'
-const gitLabAccessToken = 'Xt3GUsnuVybXsQ6bUxQk'
-const assingedIssuesRequest = `${gitLabUrl}/issues?scope=assigned-to-me&private_token=${gitLabAccessToken}`
-
+const explorer = cosmiconfig('gitlabcz')
 const maxLineWidth = 100
 const currentBranch = branch.sync()
 const paddingLength = Object.keys(types.length).length + 1
-
 const wrapOptions = {
   trim: true,
   newline: '\n',
@@ -36,81 +33,88 @@ const transformIssuesPayloadToList = R.pipe(
   R.map(transformIssueToPromptListItem)
 )
 
-const getIssueChoices = fetch(assingedIssuesRequest)
-  .then(res => res.json())
-  .then(transformIssuesPayloadToList)
+const getIssueChoices = (apiUrl, accessToken) =>
+  fetch(`${apiUrl}/issues?scope=assigned-to-me&private_token=${accessToken}`)
+    .then(res => res.json())
+    .then(transformIssuesPayloadToList)
 
 const typeChoices = transformTypesToList(types)
 
 const prompter = (cz, commit) => {
-  getIssueChoices.then(issueChoices =>
-    inquirer
-      .prompt([
-        {
-          type: 'list',
-          name: 'type',
-          message: `select the type of change that you're committing\n`,
-          choices: typeChoices
-        },
-        {
-          type: 'input',
-          name: 'scope',
-          message: `what is the scope of this change? (e.g. package.json) (press enter to skip)\n`
-        },
-        {
-          type: 'checkbox',
-          name: 'issues',
-          message: `gitlab issue id(s)? (branch: ${currentBranch})\n`,
-          choices: issueChoices,
-          validate: input => {
-            if (!input) return `no issues specified`
-            return true
-          }
-        },
-        {
-          type: 'input',
-          name: 'transition',
-          message: `transition command (e.g: resolve, in-progress, testing, review, closed, etc.) (optional)\n`
-        },
-        {
-          type: 'input',
-          name: 'subject',
-          message: `write a short, imperative tense description of the change (i.e: bumped react dependency to 16.0.2rc) (required)\n`,
-          validate: input => {
-            if (!input) return `empty commit message`
-            return true
-          }
-        },
-        {
-          type: 'input',
-          name: 'comment',
-          message: `provide a longer description of the change (optional)\n`
-        },
-        {
-          type: 'confirm',
-          name: 'isBreaking',
-          message: 'are there any breaking changes?\n',
-          default: R.F()
-        },
-        {
-          type: 'input',
-          name: 'breaking',
-          message: 'describe the breaking changes\n',
-          when: R.propEq('isBreaking', R.T)
-        },
-        {
-          type: 'input',
-          name: 'time',
-          message: 'time spent? (i.e. 3h 15m)\n',
-          validate: input => {
-            if (!input) return `please provide a time estimate`
-            return true
-          }
-        }
-      ])
-      .then(formatCommit)
-      .then(commit)
-  )
+  explorer
+    .load()
+    .then(result => {
+      const {gitLabApiUrl, gitLabAccessToken} = result.config
+      getIssueChoices(gitLabApiUrl, gitLabAccessToken).then(issueChoices =>
+        inquirer
+          .prompt([
+            {
+              type: 'list',
+              name: 'type',
+              message: `select the type of change that you're committing\n`,
+              choices: typeChoices
+            },
+            {
+              type: 'input',
+              name: 'scope',
+              message: `what is the scope of this change? (e.g. package.json) (press enter to skip)\n`
+            },
+            {
+              type: 'checkbox',
+              name: 'issues',
+              message: `gitlab issue id(s)? (branch: ${currentBranch})\n`,
+              choices: issueChoices,
+              validate: input => {
+                if (!input) return `no issues specified`
+                return true
+              }
+            },
+            {
+              type: 'input',
+              name: 'transition',
+              message: `transition command (e.g: resolve, in-progress, testing, review, closed, etc.) (optional)\n`
+            },
+            {
+              type: 'input',
+              name: 'subject',
+              message: `write a short, imperative tense description of the change (i.e: bumped react dependency to 16.0.2rc) (required)\n`,
+              validate: input => {
+                if (!input) return `empty commit message`
+                return true
+              }
+            },
+            {
+              type: 'input',
+              name: 'comment',
+              message: `provide a longer description of the change (optional)\n`
+            },
+            {
+              type: 'confirm',
+              name: 'isBreaking',
+              message: 'are there any breaking changes?\n',
+              default: R.F()
+            },
+            {
+              type: 'input',
+              name: 'breaking',
+              message: 'describe the breaking changes\n',
+              when: R.propEq('isBreaking', R.T)
+            },
+            {
+              type: 'input',
+              name: 'time',
+              message: 'time spent? (i.e. 3h 15m)\n',
+              validate: input => {
+                if (!input) return `please provide a time estimate`
+                return true
+              }
+            }
+          ])
+          .then(formatCommit)
+          .then(commit)
+      )
+    })
+    .catch(console.error)
 }
 
 const formatCommit = answers => {

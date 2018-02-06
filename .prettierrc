@@ -1,8 +1,10 @@
-tabWidth: 2
-semi: false
-useTabs: false
-printWidth: 80
-singleQuote: true
-arrowParens: "avoid"
-bracketSpacing: false
-trailingComma: "none"
+{
+  "tabWidth": 2,
+  "semi": false,
+  "useTabs": false,
+  "printWidth": 80,
+  "singleQuote": true,
+  "arrowParens": "avoid",
+  "bracketSpacing": false,
+  "trailingComma": "none"
+}
