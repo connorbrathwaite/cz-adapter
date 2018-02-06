@@ -29,7 +29,7 @@ const getIssueChoices = () =>
 */
 const postSpentTime = ({issueId, duration}) =>
   fetch(
-    `${gitLabApiUrl}/projects/${projectId}/issues/${issueId}/add_spent_time?${duration}&private_token=${gitLabAccessToken}`,
+    `${gitLabApiUrl}/projects/${projectId}/issues/${issueId}/add_spent_time?$duration=${duration}&private_token=${gitLabAccessToken}`,
     {
       method: 'POST'
     }
