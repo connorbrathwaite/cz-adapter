@@ -11,9 +11,6 @@ const {
 const types = require('./types')
 
 /* https://docs.gitlab.com/ee/api/README.html#personal-access-tokens */
-const headers = {
-  'Private-Token': gitLabAccessToken
-}
 
 /* 
   getIssueChoices :: () -> Promise -> [Object]
@@ -21,11 +18,7 @@ const headers = {
 */
 const getIssueChoices = () =>
   fetch(
-    `${gitLabApiUrl}/issues?scope=assigned-to-me&private_token=${gitLabAccessToken}`,
-    {
-      method: 'GET',
-      headers
-    }
+    `${gitLabApiUrl}/issues?scope=assigned-to-me&private_token=${gitLabAccessToken}`
   )
     .then(res => res.json())
     .then(transformIssuesPayloadToList)
@@ -36,14 +29,15 @@ const getIssueChoices = () =>
 */
 const postSpentTime = ({issueId, duration}) =>
   fetch(
-    `${gitLabApiUrl}/projects/${projectId}/issues/${issueId}/add_spent_time?${duration}`,
+    `${gitLabApiUrl}/projects/${projectId}/issues/${issueId}/add_spent_time?${duration}&private_token=${gitLabAccessToken}`,
     {
-      method: 'POST',
-      headers
+      method: 'POST'
     }
   )
     .then(res => res.json())
+    .then(console.log)
     .then(R.prop('total_time_spent'))
+    .catch(console.error)
 
 /* 
   paddingLength :: [Object] -> Number 
@@ -133,7 +127,7 @@ const format = answers => {
 
   const commit = `${head}\n\n${body}\n\n${breaking}`
 
-  console.log(answers.time)
+  console.log(answers.time, answers.issues)
 
   return (
     postSpentTime({
