@@ -68,7 +68,7 @@ const typeChoices = transformTypesToList(types)
 */
 const transformIssueToPromptListItem = issue => ({
   name: `${issue.title} (${issue.web_url})`,
-  value: `#${issue.iid}`,
+  value: issue.iid,
   project: issue.project_id
 })
 
@@ -121,7 +121,7 @@ const format = answers => {
   const rawCommit = [
     comment,
     `spent: ${answers.time}`,
-    `issues: ${answers.issues}`,
+    `issue: #${answers.issues}`,
     transition
   ]
 
@@ -137,7 +137,7 @@ const format = answers => {
 
   return (
     postSpentTime({
-      issueId: answers.issue,
+      issueId: answers.issues,
       duration: answers.time
     })
       .then(console.log)
