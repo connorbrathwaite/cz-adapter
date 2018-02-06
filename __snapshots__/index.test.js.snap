@@ -1,6 +1,6 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
-exports[`format commits should perform a full commit 1`] = `
+exports[`formatCommit should format a full commit 1`] = `
 "feat(chore): bumped react dependency to 16.0.2rc
 
 false
